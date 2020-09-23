@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/music_player_background"
+    android:orientation="vertical"
+    tools:context=".ui.MusicPlayerActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/robotobold"
+            android:gravity="center"
+            android:text="@string/playing_now"
+            android:textColor="@color/hash"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold" />
+
+
+        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+            android:id="@+id/player_backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_margin="@dimen/_13sdp"
+            android:foreground="?attr/selectableItemBackground"
+            app:neomorph_background_color="@color/neomorph_background"
+            app:neomorph_elevation="3dp"
+            app:neomorph_highlight_color="@color/neomorph_highlight"
+            app:neomorph_shadow_color="@color/neomorph_shadow"
+            app:neomorph_shadow_type="outer"
+            app:neomorph_view_type="circular">
+
+            <ImageView
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:scaleType="center"
+                android:src="@drawable/back_arrow_icon"
+                tools:ignore="ContentDescription" />
+        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+    </RelativeLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/player_viewpager"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_250sdp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_250sdp"
+        android:layout_gravity="center"
+        app:neomorph_background_color="@color/neomorph_background"
+        app:neomorph_elevation="3dp"
+        app:neomorph_highlight_color="@color/neomorph_highlight"
+        app:neomorph_layer_type="hardware"
+        app:neomorph_shadow_color="@color/neomorph_shadow"
+        app:neomorph_shadow_type="outer"
+        app:neomorph_shadow_visible="true"
+        app:neomorph_view_type="circular">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/player_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/music"
+            android:scaleType="fitXY"
+            android:src="@drawable/music_logo"
+            app:riv_border_color="@color/neomorph_highlight"
+            app:riv_border_width="@dimen/_5sdp"
+            app:riv_corner_radius="@dimen/_250sdp"
+            tools:ignore="UnusedAttribute" />
+
+    </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+    <TextView
+        android:id="@+id/player_album"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:singleLine="true"
+        android:text="@string/album"
+        android:textColor="@color/hash"
+        android:textSize="@dimen/_15sdp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <SeekBar
+            android:id="@+id/player_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp">
+
+            <TextView
+                android:id="@+id/player_startTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:fontFamily="@font/roboto_thin"
+                android:textColor="@color/hash"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/player_endTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:fontFamily="@font/roboto_thin"
+                android:textColor="@color/hash"
+                android:textSize="@dimen/_12sdp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_13sdp"
+                app:neomorph_background_color="@color/neomorph_background"
+                app:neomorph_elevation="3dp"
+                app:neomorph_highlight_color="@color/neomorph_highlight"
+                app:neomorph_shadow_color="@color/neomorph_shadow"
+                app:neomorph_shadow_type="outer"
+                app:neomorph_view_type="circular">
+
+                <ImageView
+                    android:id="@+id/player_prevBtn"
+                    android:layout_width="@dimen/_45sdp"
+                    android:layout_height="@dimen/_45sdp"
+                    android:contentDescription="@string/music"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:scaleType="center"
+                    android:src="@drawable/prev_icon"
+                    tools:ignore="UnusedAttribute" />
+            </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/player_playBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp" />
+
+            <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_13sdp"
+                app:neomorph_background_color="@color/neomorph_background"
+                app:neomorph_elevation="3dp"
+                app:neomorph_highlight_color="@color/neomorph_highlight"
+                app:neomorph_shadow_color="@color/neomorph_shadow"
+                app:neomorph_shadow_type="outer"
+                app:neomorph_view_type="circular">
+
+                <ImageView
+                    android:id="@+id/player_nextBtn"
+                    android:layout_width="@dimen/_45sdp"
+                    android:layout_height="@dimen/_45sdp"
+                    android:contentDescription="@string/music"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:scaleType="center"
+                    android:src="@drawable/next_icon"
+                    tools:ignore="UnusedAttribute" />
+            </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/player__volume_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_5sdp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/volume"
+            android:textColor="@color/hash"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/music_player_background"
+    android:orientation="vertical"
+    tools:context=".ui.SingleAlbumActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/robotobold"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/album"
+            android:textColor="@color/hash"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+            android:id="@+id/single_album_backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginHorizontal="@dimen/_13sdp"
+            android:layout_marginVertical="@dimen/_13sdp"
+            app:neomorph_background_color="@color/neomorph_background"
+            app:neomorph_elevation="3dp"
+            app:neomorph_highlight_color="@color/neomorph_highlight"
+            app:neomorph_shadow_color="@color/neomorph_shadow"
+            app:neomorph_shadow_type="outer"
+            app:neomorph_view_type="circular">
+
+            <ImageView
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:scaleType="center"
+                android:src="@drawable/back_arrow_icon"
+                tools:ignore="ContentDescription" />
+        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+    </RelativeLayout>
+
+    <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_200sdp"
+        android:layout_gravity="center"
+        app:neomorph_background_color="@color/neomorph_background"
+        app:neomorph_elevation="0dp"
+        app:neomorph_highlight_color="@color/neomorph_highlight"
+        app:neomorph_layer_type="hardware"
+        app:neomorph_shadow_color="@color/neomorph_shadow"
+        app:neomorph_shadow_type="outer"
+        app:neomorph_shadow_visible="true"
+        app:neomorph_view_type="circular">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/single_album_image"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            app:riv_border_width="@dimen/_5sdp"
+            app:riv_border_color="@color/neomorph_highlight"
+            android:src="@drawable/music_logo"
+            app:riv_corner_radius="@dimen/_250sdp"
+            tools:ignore="ContentDescription" />
+    </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+    <TextView
+        android:id="@+id/single_album_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:singleLine="true"
+        android:text="@string/album"
+        android:textColor="@color/hash"
+        android:textSize="@dimen/_14sdp"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/single_album_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

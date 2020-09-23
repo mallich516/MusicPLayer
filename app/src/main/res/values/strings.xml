@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MusicPlayer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="music">Music</string>
+    <string name="album">ALBUM</string>
+    <string name="artist">Artist</string>
+    <string name="title">Title</string>
+    <string name="playing_now">PLAYING NOW</string>
+    <string name="malli_ch">Malli Ch</string>
+    <string name="volume">VOLUME</string>
+    <string name="let_s_start_music">Let\'s Start Music</string>
+    <string name="play_now">Play Now</string>
+</resources>
