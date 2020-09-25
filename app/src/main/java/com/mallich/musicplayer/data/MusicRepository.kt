@@ -1,4 +1,4 @@
-package com.mallich.musicplayer
+package com.mallich.musicplayer.data
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -11,15 +11,20 @@ import androidx.annotation.RequiresApi
 import com.mallich.musicplayer.models.SongDataModel
 
 class MusicRepository {
+
     companion object {
 
-
+        var SONG_STATUS: String = "0"
+        const val SONG_PLAY: String = "1"
+        const val SONG_PAUSE: String = "0"
         const val SONG_POSITION: String = "songId"
         const val TYPE: String = "Type"
         const val ALBUM: String = "Album"
         const val ALL_SONGS: String = "AllSongs"
         const val ALBUM_ART: String = "albumArt"
         const val SINGLE_ALBUM: String = "SingleAlbum"
+        const val LETS_START_MUSIC: String = "Let's Start Music"
+        const val PLAY_NOW: String = "Play Now"
 
         @RequiresApi(Build.VERSION_CODES.R)
         @SuppressLint("Recycle")
@@ -136,6 +141,44 @@ class MusicRepository {
             return list.distinctBy { songDataModel -> songDataModel.album } as MutableList<SongDataModel>
         }
 
+        @SuppressLint("Recycle")
+        fun getAllArtists(application: Application): MutableList<SongDataModel> {
+
+            val list = mutableListOf<SongDataModel>()
+
+            val uri: Uri = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
+
+            val sortOrder = MediaStore.Audio.ArtistColumns.ARTIST + " ASC"
+
+            val cursor: Cursor? =
+                application.contentResolver!!.query(uri, null, null, null, sortOrder)
+
+            if (cursor != null && cursor.moveToFirst()) {
+                val name = cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)
+                val artId = cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM_ID)
+
+                do {
+                    val artistName = cursor.getString(name)
+                    val albumArtID = cursor.getLong(artId)
+
+                    val sArtworkUri = Uri.parse("content://media/external/audio/albumart")
+                    val albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumArtID)
+
+                    val songDataModel = SongDataModel(
+                        albumArtID,
+                        artistName,
+                        "",
+                        artistName,
+                        "",
+                        "",
+                        albumArtUri.toString(),
+                        ""
+                    )
+                    list.add(songDataModel)
+                } while (cursor.moveToNext())
+            }
+            return list
+        }
 
         fun getTimeString(milliseconds: Int): String {
             val hours = (milliseconds / (1000 * 60 * 60))

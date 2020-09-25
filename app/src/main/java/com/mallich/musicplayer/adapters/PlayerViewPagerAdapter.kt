@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.bumptech.glide.Glide
-import com.mallich.musicplayer.MusicRepository
+import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.R
 import com.mallich.musicplayer.fragments.MusicPlayerFragment
-import com.mallich.musicplayer.interfaces.PlayerInterface
+import com.mallich.musicplayer.interfaces.ViewPagerInterface
 import com.mallich.musicplayer.models.SongDataModel
 import com.mallich.musicplayer.ui.MainActivity
 import com.mallich.musicplayer.ui.MusicPlayerActivity
@@ -22,7 +22,7 @@ import java.lang.Exception
 class PlayerViewPagerAdapter(
     val application: Application,
     fragmentManager: FragmentManager,
-    private val playerInterface: PlayerInterface,
+    private val playerInterface: ViewPagerInterface,
     private val list: MutableList<SongDataModel>
 ) :
     FragmentStatePagerAdapter(fragmentManager) {
@@ -40,7 +40,6 @@ class PlayerViewPagerAdapter(
         bundle.putInt("position", position)
         musicPlayerFragment.arguments = bundle
         playerInterface.playSong(list[position], position)
-//        Toast.makeText(application, "${list[position].album} $position", Toast.LENGTH_SHORT).show()
 
         MusicPlayerActivity.newAlbum = list[position].album
         MusicPlayerActivity.newSongPosition = position
@@ -57,11 +56,11 @@ class PlayerViewPagerAdapter(
         if (MusicPlayerActivity.mediaPlayer == null) {
             MusicPlayerActivity.songPosition = MusicPlayerActivity.newSongPosition
             MusicPlayerActivity.albumType = MusicPlayerActivity.newAlbumType
-            MusicPlayerActivity.album = MusicPlayerActivity.newAlbum
+            MusicPlayerActivity.album = MusicPlayerActivity.newAlbum!!
             playNewSong()
         } else if (MusicPlayerActivity.mediaPlayer != null) {
             if (MusicPlayerActivity.album != MusicPlayerActivity.newAlbum || MusicPlayerActivity.albumType != MusicPlayerActivity.newAlbumType || MusicPlayerActivity.newSongPosition != MusicPlayerActivity.songPosition) {
-                MusicPlayerActivity.album = MusicPlayerActivity.newAlbum
+                MusicPlayerActivity.album = MusicPlayerActivity.newAlbum!!
                 MusicPlayerActivity.albumType = MusicPlayerActivity.newAlbumType
                 MusicPlayerActivity.songPosition = MusicPlayerActivity.newSongPosition
                 playNextSong()

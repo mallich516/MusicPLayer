@@ -8,7 +8,8 @@ import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.ViewModelProvider
+import com.mallich.musicplayer.data.MusicViewModel
 import com.mallich.musicplayer.ui.MainActivity
 import com.mallich.musicplayer.ui.MusicPlayerActivity
 
@@ -17,44 +18,45 @@ class MusicService : Service() {
     companion object {
         private lateinit var notificationLayout: RemoteViews
         private const val NOTIFICATION_CHANNEL_ID = "Music"
-        private const val NOTIFICATION_ID = 516
+        private const val NOTIFICATION_ID = 1
         const val PREV_BTN = "prevBtn"
         const val PLAY_BTN = "playBtn"
         const val NEXT_PLAY = "nextBtn"
 
-        var SONG_POSITION: Int = 0
-        var ALBUM_TYPE: String = ""
-        var ALBUM: String = ""
+        private var SONG_POSITION: Int = 0
+        private var ALBUM_TYPE: String = ""
+        private var ALBUM: String = ""
 
-        fun createNotificationChannel(context: Context) {
-            val title = MusicPlayerActivity.playList[MusicPlayerActivity.songPosition].name
-            val album = MusicPlayerActivity.playList[MusicPlayerActivity.songPosition].album
-
+        fun createNotificationChannel(context: Context, title: String, album: String) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val importance = NotificationManager.IMPORTANCE_DEFAULT
-                val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, title, importance).apply {
-                    description = album
-                }
+                val channel =
+                    NotificationChannel(NOTIFICATION_CHANNEL_ID, title, importance).apply {
+                        description = album
+                    }
                 val notificationManager: NotificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(channel)
             }
-            notificationBuilder(context, title, album)
         }
 
-        private fun notificationBuilder(context: Context, title: String, album: String) {
+        private fun notificationBuilder(
+            context: Context,
+            title: String,
+            album: String
+        ): Notification {
 
             val intent = Intent(context, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
 
             SONG_POSITION = MusicPlayerActivity.songPosition
-            ALBUM_TYPE = MusicPlayerActivity.albumType!!
-            ALBUM = MusicPlayerActivity.album!!
+            ALBUM_TYPE = MusicPlayerActivity.albumType
+            ALBUM = MusicPlayerActivity.album
 
             notificationLayout =
                 RemoteViews(context.packageName, R.layout.notification_layout)
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
             notificationLayout.setImageViewUri(
                 R.id.notification_image,
@@ -112,39 +114,44 @@ class MusicService : Service() {
                 )
             )
 
-            val builder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+            val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.music_logo)
                 .setContentTitle(album)
-                .setContentText(title)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .setSound(Uri.EMPTY)
                 .setOngoing(true)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setCustomContentView(notificationLayout)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setContentText(title)
+                .setContentIntent(pendingIntent)
+                .setCustomContentView(notificationLayout).build()
 
-            with(NotificationManagerCompat.from(context)) {
-                notify(NOTIFICATION_ID, builder.build())
-            }
+            notification.flags = Notification.FLAG_ONGOING_EVENT
+
+            return notification
         }
     }
 
-    override fun onBind(intent: Intent): IBinder {
-        TODO("Return the communication channel to the service.")
+    override fun onBind(intent: Intent): IBinder? {
+        return null
     }
 
     override fun onCreate() {
         super.onCreate()
     }
 
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        createNotificationChannel(this)
-        return super.onStartCommand(intent, flags, startId)
+
+        val title = intent?.getStringExtra("name")
+        val album = intent?.getStringExtra("album")
+
+        println("POSITION : $title $album ${MusicPlayerActivity.songPosition} ${MusicPlayerActivity.playList.size}")
+        createNotificationChannel(this, title!!, album!!)
+        startForeground(NOTIFICATION_ID, notificationBuilder(this, title, album))
+        return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        stopSelf()
     }
 
 }

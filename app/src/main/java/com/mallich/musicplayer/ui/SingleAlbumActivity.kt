@@ -1,5 +1,6 @@
 package com.mallich.musicplayer.ui
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,12 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-import com.mallich.musicplayer.MusicRepository
+import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.R
 import com.mallich.musicplayer.adapters.SingleAlbumAdapter
 
 class SingleAlbumActivity : AppCompatActivity() {
 
+    private lateinit var album: String
+    private lateinit var albumArt: String
     private lateinit var imageView: ImageView
     private lateinit var textView: TextView
     private lateinit var recyclerView: RecyclerView
@@ -31,8 +34,8 @@ class SingleAlbumActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.single_album_recyclerView)
         neomorphFrameLayout = findViewById(R.id.single_album_backBtn)
 
-        val album = intent.getStringExtra(MusicRepository.ALBUM)
-        val albumArt = intent.getStringExtra(MusicRepository.ALBUM_ART)
+        album = intent.getStringExtra(MusicRepository.ALBUM)!!
+        albumArt = intent.getStringExtra(MusicRepository.ALBUM_ART)!!
 
         textView.text = album
         Glide.with(imageView)
@@ -42,15 +45,18 @@ class SingleAlbumActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter =
-            SingleAlbumAdapter(this, MusicRepository.getSingleAlbum(application, album.toString()))
+            SingleAlbumAdapter(
+                this,
+                MusicRepository.getSingleAlbum(application, album),
+                album
+            )
 
         neomorphFrameLayout.setOnClickListener {
             onBackPressed()
         }
     }
 
-//    override fun onBackPressed() {
-//        startActivity(Intent(this, MainActivity::class.java))
-//    }
-
+    override fun onBackPressed() {
+        startActivity(Intent(this, MainActivity::class.java))
+    }
 }

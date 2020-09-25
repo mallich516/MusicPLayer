@@ -1,26 +1,17 @@
 package com.mallich.musicplayer.fragments
 
-import android.app.Application
-import android.content.ContentUris
-import android.database.Cursor
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.GridLayoutAnimationController
-import android.widget.GridLayout
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mallich.musicplayer.MusicRepository
+import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.adapters.AlbumAdapter
 import com.mallich.musicplayer.R
-import com.mallich.musicplayer.models.SongDataModel
 
 class AlbumsFragment : Fragment() {
 
