@@ -29,11 +29,15 @@ class AlbumAdapter(val context: Context, private val list: MutableList<SongDataM
         val songDataModel = list[position]
         holder.albumsRowBinding.data = songDataModel
         holder.albumsRowBinding.root.setOnClickListener {
-            val intent= Intent(context, SingleAlbumActivity::class.java)
-            intent.putExtra(MusicRepository.ALBUM, songDataModel.album)
-            intent.putExtra(MusicRepository.ALBUM_ART, songDataModel.albumArt)
-            context.startActivity(intent)
+            openSelectedAlbum(songDataModel)
         }
+    }
+
+    private fun openSelectedAlbum(songDataModel: SongDataModel) {
+        val intent= Intent(context, SingleAlbumActivity::class.java)
+        intent.putExtra(MusicRepository.ALBUM, songDataModel.album)
+        intent.putExtra(MusicRepository.ALBUM_ART, songDataModel.albumArt)
+        context.startActivity(intent)
     }
 
     override fun getItemCount(): Int {

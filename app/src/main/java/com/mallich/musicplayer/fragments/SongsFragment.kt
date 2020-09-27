@@ -9,18 +9,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.R
 import com.mallich.musicplayer.adapters.SongsAdapter
+import com.mallich.musicplayer.data.MusicViewModel
 import com.mallich.musicplayer.interfaces.AllMusicInterface
 import com.mallich.musicplayer.ui.MainActivity
 import com.mallich.musicplayer.ui.MusicPlayerActivity
 
 class SongsFragment : Fragment(), AllMusicInterface {
 
-    @RequiresApi(Build.VERSION_CODES.R)
+    private lateinit var musicViewModel: MusicViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,17 +34,20 @@ class SongsFragment : Fragment(), AllMusicInterface {
         val recyclerView: RecyclerView = view.findViewById(R.id.songsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        MainActivity.getPlayList(requireActivity().application)
-
-        recyclerView.adapter = SongsAdapter(MainActivity(), context!!, MusicRepository.getAllSongs(requireActivity().application))
+        musicViewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(MusicViewModel::class.java)
+        recyclerView.adapter = SongsAdapter(context!!, MusicRepository.getAllSongs(requireActivity().application), this)
 
         return view
     }
 
-    override fun playMusic(context: Context, position: Int) {
-        val intent = Intent(context, MusicPlayerActivity::class.java)
-        intent.putExtra("songId", position)
-        context.startActivity(intent)
+    override fun sendSelectedSongToPlay(context: Context, position: Int) {
+        MusicRepository.checkIfMediaPlayerIsNull(context)
+        MusicRepository.songPosition = position
+        MusicRepository.albumType = MusicRepository.ALL_SONGS
+        MusicRepository.SELECTED_SONG = true
+        MusicRepository.getSelectedPlayList(requireActivity().application)
+        MusicRepository.updateSongInDataStore(musicViewModel)
+        context.startActivity(Intent(context, MusicPlayerActivity::class.java))
     }
 
 }

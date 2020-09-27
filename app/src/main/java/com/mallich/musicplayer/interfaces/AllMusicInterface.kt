@@ -4,6 +4,6 @@ import android.content.Context
 
 interface AllMusicInterface {
 
-    fun playMusic(context: Context, position: Int)
+    fun sendSelectedSongToPlay(context: Context, position: Int)
 
 }

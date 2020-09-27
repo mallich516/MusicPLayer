@@ -1,24 +1,33 @@
 package com.mallich.musicplayer.data
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
 import android.database.Cursor
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.bumptech.glide.Glide
+import com.mallich.musicplayer.MusicService
+import com.mallich.musicplayer.R
+import com.mallich.musicplayer.interfaces.AllMusicInterface
 import com.mallich.musicplayer.models.SongDataModel
+import com.mallich.musicplayer.ui.MainActivity
+import com.mallich.musicplayer.ui.MusicPlayerActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class MusicRepository {
 
     companion object {
 
-        var SONG_STATUS: String = "0"
-        const val SONG_PLAY: String = "1"
-        const val SONG_PAUSE: String = "0"
-        const val SONG_POSITION: String = "songId"
-        const val TYPE: String = "Type"
         const val ALBUM: String = "Album"
         const val ALL_SONGS: String = "AllSongs"
         const val ALBUM_ART: String = "albumArt"
@@ -26,9 +35,28 @@ class MusicRepository {
         const val LETS_START_MUSIC: String = "Let's Start Music"
         const val PLAY_NOW: String = "Play Now"
 
-        @RequiresApi(Build.VERSION_CODES.R)
+        // For MusicService and MusicReceiver
+        const val PREV_BTN = "prevBtn"
+        const val PLAY_BTN = "playBtn"
+        const val NEXT_PLAY = "nextBtn"
+
+        const val SONG_PLAY: String = "1"
+        const val SONG_PAUSE: String = "0"
+        var SONG_STATUS: String = "0"
+        var PLAYER_ON: Boolean = false
+        var SELECTED_SONG: Boolean = false
+
+        var songPosition = 0
+        var songTitle: String = ""
+        var artist: String = ""
+        var album: String = ""
+        var albumArt: String = ""
+        var albumType: String = ALL_SONGS
+        var playList: MutableList<SongDataModel> = mutableListOf()
+
+        // Reusable Methods
         @SuppressLint("Recycle")
-        fun getAllSongs(application: Application): MutableList<SongDataModel> {
+        fun getAllSongs(context: Context): MutableList<SongDataModel> {
 
             val list: MutableList<SongDataModel> = mutableListOf()
 
@@ -41,7 +69,7 @@ class MusicRepository {
             // sorting the music
             val sortOrder = MediaStore.Audio.Media.TITLE + " ASC"
 
-            val cursor: Cursor? = application.contentResolver!!.query(
+            val cursor: Cursor? = context.contentResolver!!.query(
                 uri,
                 null,
                 selection,
@@ -52,8 +80,8 @@ class MusicRepository {
             if (cursor != null && cursor.moveToFirst()) {
                 val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
                 val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-                val album: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
-                val artist: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+                val album: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
+                val artist: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)
                 val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
                 val type: Int = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE)
                 val albumId: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
@@ -90,7 +118,7 @@ class MusicRepository {
             return list
         }
 
-        fun getAllAlbums(application: Application): MutableList<SongDataModel> {
+        fun getAllAlbums(context: Context): MutableList<SongDataModel> {
 
             // mutable list initialization
             val list: MutableList<SongDataModel> = mutableListOf()
@@ -104,7 +132,7 @@ class MusicRepository {
             // sorting order for albums
             val sortOrder = MediaStore.Audio.AlbumColumns.ALBUM + " ASC"
 
-            val cursor: Cursor? = application.contentResolver!!.query(
+            val cursor: Cursor? = context.contentResolver!!.query(
                 uri,
                 null,
                 selection,
@@ -113,10 +141,10 @@ class MusicRepository {
             )
 
             if (cursor != null && cursor.moveToFirst()) {
-
                 val album: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
                 val albumId: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ID)
                 val albumArtist: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)
+
                 do {
                     val albumTitle = cursor.getString(album)
                     val albumID = cursor.getLong(albumId)
@@ -142,21 +170,22 @@ class MusicRepository {
         }
 
         @SuppressLint("Recycle")
-        fun getAllArtists(application: Application): MutableList<SongDataModel> {
+        fun getAllArtists(context: Context): MutableList<SongDataModel> {
 
             val list = mutableListOf<SongDataModel>()
 
-            val uri: Uri = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
+            val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+
+            val selection = MediaStore.Audio.ArtistColumns.ARTIST + "!='<unknown>'"
 
             val sortOrder = MediaStore.Audio.ArtistColumns.ARTIST + " ASC"
 
             val cursor: Cursor? =
-                application.contentResolver!!.query(uri, null, null, null, sortOrder)
+                context.contentResolver!!.query(uri, null, selection, null, sortOrder)
 
             if (cursor != null && cursor.moveToFirst()) {
-                val name = cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)
-                val artId = cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM_ID)
-
+                val name = cursor.getColumnIndex(MediaStore.Audio.ArtistColumns.ARTIST)
+                val artId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
                 do {
                     val artistName = cursor.getString(name)
                     val albumArtID = cursor.getLong(artId)
@@ -166,9 +195,9 @@ class MusicRepository {
 
                     val songDataModel = SongDataModel(
                         albumArtID,
-                        artistName,
                         "",
                         artistName,
+                        "",
                         "",
                         "",
                         albumArtUri.toString(),
@@ -180,40 +209,72 @@ class MusicRepository {
             return list
         }
 
-        fun getTimeString(milliseconds: Int): String {
-            val hours = (milliseconds / (1000 * 60 * 60))
-            val minutes = ((milliseconds % (1000 * 60 * 60)) / (1000 * 60))
-            val seconds = (((milliseconds % (1000 * 60 * 60)) % (1000 * 60)) / 1000)
+        fun getSelectedArtistAlbums(context: Context, artist: String): MutableList<SongDataModel> {
 
-            var secondsString = ""
-            secondsString = if (seconds < 10) {
-                String.format("%02d", seconds)
-            } else {
-                String.format("%2d", seconds)
+            val list = mutableListOf<SongDataModel>()
+
+            val uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
+
+            val selection = MediaStore.Audio.ArtistColumns.ARTIST + "='$artist'"
+
+            val sortOrder = MediaStore.Audio.Albums.ALBUM + " ASC"
+
+            val cursor: Cursor? = context.contentResolver!!.query(
+                uri,
+                null,
+                selection,
+                null,
+                sortOrder
+            )
+
+            if (cursor != null && cursor.moveToFirst()) {
+                val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
+                val artist: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)
+                val duration: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
+                val albumId: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
+                val albumInt: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
+                val fileData: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+
+                do {
+                    val titleString = cursor.getString(title)
+                    val artistString = cursor.getString(artist)
+//                    val durationString = cursor.getString(duration)
+//                    val albumArtId = cursor.getLong(albumId)
+//                    val fileDataString = cursor.getString(fileData)
+                    val albumString = cursor.getString(albumInt)
+
+//                    val artWorkUri = Uri.parse("content://media/external/audio/albumart")
+//                    val albumArt = ContentUris.withAppendedId(artWorkUri, albumArtId)
+
+                    val songDataModel = SongDataModel(
+                        0,
+                        titleString,
+                        albumString,
+                        artistString,
+                        "",
+                        "",
+                        "",
+                        ""
+                    )
+                    list.add(songDataModel)
+                } while (cursor.moveToNext())
             }
 
-            if (hours == 0) {
-                String.format("%2d", hours) + ":" + String.format(
-                    "%2d",
-                    minutes
-                ) + ":" + secondsString
-            }
-            return String.format("%2d", minutes) + ":" + secondsString
+            return list
         }
 
         @SuppressLint("Recycle")
-        @RequiresApi(Build.VERSION_CODES.R)
-        fun getSingleAlbum(application: Application, album: String): MutableList<SongDataModel> {
+        fun getSingleAlbum(context: Context, album: String): MutableList<SongDataModel> {
 
             val list: MutableList<SongDataModel> = mutableListOf()
 
             val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
-            val selection = MediaStore.Audio.Media.ALBUM + "='$album'"
+            val selection = MediaStore.Audio.Albums.ALBUM + "='$album'"
 
             val sortOrder = MediaStore.Audio.Media.TITLE + " ASC"
 
-            val cursor: Cursor? = application.contentResolver!!.query(
+            val cursor: Cursor? = context.contentResolver!!.query(
                 uri,
                 null,
                 selection,
@@ -223,10 +284,10 @@ class MusicRepository {
 
             if (cursor != null && cursor.moveToFirst()) {
                 val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-                val artist: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+                val artist: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)
                 val duration: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
                 val albumId: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
-                val albumInt: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
+                val albumInt: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
                 val fileData: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
 
                 do {
@@ -256,5 +317,123 @@ class MusicRepository {
             return list;
         }
 
+        private fun updateSongInDataStore(context: Context) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val musicDataStore = MusicDataStore(context)
+                musicDataStore.updateCurrentSongDetails(
+                    playList[songPosition].name,
+                    playList[songPosition].album,
+                    playList[songPosition].artist,
+                    songPosition,
+                    albumType,
+                    playList[songPosition].albumArt
+                )
+            }
+        }
+
+        fun getSelectedPlayList(context: Context) {
+            if (albumType == SINGLE_ALBUM) {
+                playList.clear()
+                playList.addAll(getSingleAlbum(context, album))
+                println("PLAYLIST SIZE $albumType ${playList.size}")
+            } else {
+                playList.clear()
+                playList.addAll(getAllSongs(context))
+                println("PLAYLIST SIZE $albumType ${playList.size}")
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        private fun buildNotification(context: Context) {
+            // Start Notification Service
+            val intentService = Intent(context, MusicService::class.java)
+            intentService.putExtra(
+                "name",
+                playList[songPosition].name
+            )
+            intentService.putExtra(
+                "album",
+                playList[songPosition].album
+            )
+            context.startForegroundService(intentService)
+        }
+
+        fun incrementSongPosition() {
+            songPosition += 1
+            if (songPosition >= playList.size) {
+                songPosition = 0
+            }
+            println("SONG POSITION : $songPosition")
+        }
+
+        fun decrementSongPosition() {
+            songPosition -= 1
+            if (songPosition < 0) {
+                songPosition = playList.size - 1
+            }
+            println("SONG POSITION : $songPosition")
+        }
+
+        fun checkIfMediaPlayerIsNull(context: Context) {
+            if (MusicPlayerActivity.mediaPlayer == null) {
+                getSelectedPlayList(context)
+                playMusic(context)
+            }
+        }
+
+        fun playMusic(context: Context) {
+            val selectedSong = Uri.parse(playList[songPosition].fileData)
+            if (MusicPlayerActivity.mediaPlayer != null) {
+                MusicPlayerActivity.mediaPlayer?.stop()
+                MusicPlayerActivity.mediaPlayer?.release()
+            }
+            MusicPlayerActivity.mediaPlayer = MediaPlayer.create(context, selectedSong)
+            if (SONG_STATUS == SONG_PLAY) {
+                MusicPlayerActivity.mediaPlayer?.start()
+            } else {
+                MusicPlayerActivity.mediaPlayer?.start()
+                MusicPlayerActivity.mediaPlayer?.pause()
+            }
+        }
+
+        fun sendSongToMusicPlayerToPlay(context: Context, position: Int, playListType: String) {
+            songPosition = position
+            albumType = playListType
+            SELECTED_SONG = true
+            updateSongInDataStore(context)
+            context.startActivity(Intent(context, MusicPlayerActivity::class.java))
+        }
+
+        fun getTimeString(milliseconds: Int): String {
+            val hours = (milliseconds / (1000 * 60 * 60))
+            val minutes = ((milliseconds % (1000 * 60 * 60)) / (1000 * 60))
+            val seconds = (((milliseconds % (1000 * 60 * 60)) % (1000 * 60)) / 1000)
+
+            var secondsString = ""
+            secondsString = if (seconds < 10) {
+                String.format("%02d", seconds)
+            } else {
+                String.format("%2d", seconds)
+            }
+
+            if (hours == 0) {
+                String.format("%2d", hours) + ":" + String.format(
+                    "%2d",
+                    minutes
+                ) + ":" + secondsString
+            }
+            return String.format("%2d", minutes) + ":" + secondsString
+        }
+
+        fun updateSongInDataStore(musicViewModel: MusicViewModel) {
+            musicViewModel.updateCurrentSong(
+                MusicRepository.playList[MusicRepository.songPosition].name,
+                MusicRepository.playList[MusicRepository.songPosition].album,
+                MusicRepository.playList[MusicRepository.songPosition].artist,
+                MusicRepository.songPosition,
+                MusicRepository.albumType,
+                MusicRepository.playList[MusicRepository.songPosition].albumArt
+            )
+        }
     }
 }

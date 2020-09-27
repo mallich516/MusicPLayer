@@ -2,15 +2,17 @@ package com.mallich.musicplayer.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mallich.musicplayer.MusicReceiver
 import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.R
+import com.mallich.musicplayer.data.MusicViewModel
 import com.mallich.musicplayer.databinding.SongsRowBinding
+import com.mallich.musicplayer.interfaces.AllMusicInterface
 import com.mallich.musicplayer.models.SongDataModel
 import com.mallich.musicplayer.ui.MusicPlayerActivity
 import java.lang.NumberFormatException
@@ -18,7 +20,7 @@ import java.lang.NumberFormatException
 class SingleAlbumAdapter(
     val context: Context,
     private val list: MutableList<SongDataModel>,
-    private val album: String
+    private val allMusicInterface: AllMusicInterface
 ) :
     RecyclerView.Adapter<SingleAlbumAdapter.ViewHolder>() {
 
@@ -35,22 +37,17 @@ class SingleAlbumAdapter(
         return ViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val songDataModel = list[position]
 
         try {
             songDataModel.duration = MusicRepository.getTimeString(songDataModel.duration.toInt())
-        } catch (e: NumberFormatException) {
-        }
-        holder.albumsRowBinding.data = songDataModel
+        } catch (e: NumberFormatException) {}
 
+        holder.albumsRowBinding.data = songDataModel
         holder.albumsRowBinding.root.setOnClickListener {
-            MusicPlayerActivity.songPosition = position
-            MusicPlayerActivity.albumType = MusicRepository.SINGLE_ALBUM
-            MusicPlayerActivity.album = album
-            MusicPlayerActivity.SELECTED_SONG = true
-            MusicReceiver.updateSongInDataStore(context)
-            context.startActivity(Intent(context, MusicPlayerActivity::class.java))
+            allMusicInterface.sendSelectedSongToPlay(context, position)
         }
     }
 

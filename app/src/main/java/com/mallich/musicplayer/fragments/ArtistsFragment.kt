@@ -12,6 +12,7 @@ import com.mallich.musicplayer.adapters.AlbumAdapter
 import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.data.MusicViewModel
 import com.mallich.musicplayer.databinding.FragmentArtistsBinding
+import com.mallich.musicplayer.ui.SingleAlbumActivity
 
 class ArtistsFragment : Fragment() {
 
@@ -26,7 +27,7 @@ class ArtistsFragment : Fragment() {
 
         binding.artistRecyclerView.layoutManager = GridLayoutManager(context, 3)
 
-
+        SingleAlbumActivity.FROM_ARTIST = true
         binding.artistRecyclerView.adapter =
             AlbumAdapter(context!!, MusicRepository.getAllArtists(activity!!.application))
 
