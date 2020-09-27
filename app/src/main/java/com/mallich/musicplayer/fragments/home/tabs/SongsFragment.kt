@@ -1,16 +1,14 @@
-package com.mallich.musicplayer.fragments
+package com.mallich.musicplayer.fragments.home.tabs
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mallich.musicplayer.data.MusicRepository
@@ -18,8 +16,6 @@ import com.mallich.musicplayer.R
 import com.mallich.musicplayer.adapters.SongsAdapter
 import com.mallich.musicplayer.data.MusicViewModel
 import com.mallich.musicplayer.interfaces.AllMusicInterface
-import com.mallich.musicplayer.ui.MainActivity
-import com.mallich.musicplayer.ui.MusicPlayerActivity
 
 class SongsFragment : Fragment(), AllMusicInterface {
 
@@ -35,7 +31,7 @@ class SongsFragment : Fragment(), AllMusicInterface {
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         musicViewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(MusicViewModel::class.java)
-        recyclerView.adapter = SongsAdapter(context!!, MusicRepository.getAllSongs(requireActivity().application), this)
+        recyclerView.adapter = SongsAdapter(requireContext(), MusicRepository.getAllSongs(requireActivity().application), this)
 
         return view
     }
@@ -47,7 +43,8 @@ class SongsFragment : Fragment(), AllMusicInterface {
         MusicRepository.SELECTED_SONG = true
         MusicRepository.getSelectedPlayList(requireActivity().application)
         MusicRepository.updateSongInDataStore(musicViewModel)
-        context.startActivity(Intent(context, MusicPlayerActivity::class.java))
+//        context.startActivity(Intent(context, MusicPlayerActivity::class.java))
+        findNavController().navigate(R.id.action_homeFragment_to_playerFragment)
     }
 
 }

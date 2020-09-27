@@ -1,13 +1,9 @@
 package com.mallich.musicplayer.data
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mallich.musicplayer.ui.MusicPlayerActivity
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -40,12 +36,12 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             if (MusicRepository.SONG_STATUS == MusicRepository.SONG_PAUSE) {
                 MusicRepository.SONG_STATUS = MusicRepository.SONG_PLAY
-                if (MusicPlayerActivity.mediaPlayer != null)
-                    MusicPlayerActivity.mediaPlayer!!.start()
+                if (MusicRepository.mediaPlayer != null)
+                    MusicRepository.mediaPlayer!!.start()
             } else {
                 MusicRepository.SONG_STATUS = MusicRepository.SONG_PAUSE
-                if (MusicPlayerActivity.mediaPlayer != null)
-                    MusicPlayerActivity.mediaPlayer!!.pause()
+                if (MusicRepository.mediaPlayer != null)
+                    MusicRepository.mediaPlayer!!.pause()
             }
             musicDataStore.updateSongStatus(MusicRepository.SONG_STATUS)
         }

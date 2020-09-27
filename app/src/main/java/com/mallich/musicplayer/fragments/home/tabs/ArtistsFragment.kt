@@ -1,4 +1,4 @@
-package com.mallich.musicplayer.fragments
+package com.mallich.musicplayer.fragments.home.tabs
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,13 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.viewbinding.ViewBinding
 import com.mallich.musicplayer.R
-import com.mallich.musicplayer.adapters.AlbumAdapter
-import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.data.MusicViewModel
 import com.mallich.musicplayer.databinding.FragmentArtistsBinding
-import com.mallich.musicplayer.ui.SingleAlbumActivity
 
 class ArtistsFragment : Fragment() {
 
@@ -27,9 +23,9 @@ class ArtistsFragment : Fragment() {
 
         binding.artistRecyclerView.layoutManager = GridLayoutManager(context, 3)
 
-        SingleAlbumActivity.FROM_ARTIST = true
-        binding.artistRecyclerView.adapter =
-            AlbumAdapter(context!!, MusicRepository.getAllArtists(activity!!.application))
+//        SingleAlbumActivity.FROM_ARTIST = true
+//        binding.artistRecyclerView.adapter =
+//            AlbumAdapter(requireContext(), MusicRepository.getAllArtists(requireActivity().application))
 
         return view
     }

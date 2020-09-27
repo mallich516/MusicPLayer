@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/music_player_background"
     android:orientation="vertical"
-    tools:context=".ui.SingleAlbumActivity">
+    tools:context=".fragments.SingleAlbumFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,33 +18,31 @@
             android:fontFamily="@font/robotobold"
             android:gravity="center"
             android:singleLine="true"
+            android:layout_marginHorizontal="@dimen/_56sdp"
             android:text="@string/album"
-            android:textColor="@color/hash"
-            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
 
-        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-            android:id="@+id/single_album_backBtn"
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/singleAlbumBackBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_13sdp"
             android:layout_alignParentStart="true"
-            android:layout_marginHorizontal="@dimen/_13sdp"
-            android:layout_marginVertical="@dimen/_13sdp"
-            app:neomorph_background_color="@color/neomorph_background"
-            app:neomorph_elevation="3dp"
-            app:neomorph_highlight_color="@color/neomorph_highlight"
-            app:neomorph_shadow_color="@color/neomorph_shadow"
-            app:neomorph_shadow_type="outer"
-            app:neomorph_view_type="circular">
-
+            android:layout_marginHorizontal="20dp"
+            app:cardCornerRadius="@dimen/_56sdp"
+            app:cardElevation="@dimen/_5sdp"
+            android:foreground="?attr/selectableItemBackground">
             <ImageView
-                android:layout_width="@dimen/_32sdp"
-                android:layout_height="@dimen/_32sdp"
-                android:scaleType="center"
-                android:src="@drawable/back_arrow_icon"
-                tools:ignore="ContentDescription" />
-        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_8sdp"
+                android:src="@drawable/home_icon"
+                tools:ignore="ContentDescription"
+                android:background="@color/white"/>
+        </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>
 
     <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
@@ -62,7 +59,7 @@
         app:neomorph_view_type="circular">
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/single_album_image"
+            android:id="@+id/singleAlbumImage"
             android:layout_width="@dimen/_200sdp"
             android:layout_height="@dimen/_200sdp"
             android:layout_gravity="center"
@@ -75,7 +72,7 @@
     </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
     <TextView
-        android:id="@+id/single_album_title"
+        android:id="@+id/singleAlbumTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20sdp"
@@ -84,12 +81,12 @@
         android:paddingHorizontal="@dimen/_10sdp"
         android:singleLine="true"
         android:text="@string/album"
-        android:textColor="@color/hash"
+        android:textColor="@color/black"
         android:textSize="@dimen/_14sdp"
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/single_album_recyclerView"
+        android:id="@+id/singleAlbumRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

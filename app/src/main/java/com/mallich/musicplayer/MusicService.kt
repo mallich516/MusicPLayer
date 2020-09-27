@@ -8,12 +8,8 @@ import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.mallich.musicplayer.data.MusicRepository
-import com.mallich.musicplayer.data.MusicViewModel
-import com.mallich.musicplayer.ui.MainActivity
-import com.mallich.musicplayer.ui.MusicPlayerActivity
+import com.mallich.musicplayer.ui.SplashScreenActivity
 
 class MusicService : Service() {
 
@@ -58,7 +54,7 @@ class MusicService : Service() {
         title: String,
         album: String
     ): Notification {
-        val intent = Intent(context, MainActivity::class.java).apply {
+        val intent = Intent(context, SplashScreenActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
@@ -75,7 +71,7 @@ class MusicService : Service() {
 
         notificationLayout.setImageViewResource(R.id.notification_prevBtn, R.drawable.prev_icon)
 
-        if (MusicPlayerActivity.mediaPlayer!!.isPlaying) {
+        if (MusicRepository.mediaPlayer!!.isPlaying) {
             notificationLayout.setImageViewResource(
                 R.id.notification_playBtn,
                 R.drawable.pause_icon

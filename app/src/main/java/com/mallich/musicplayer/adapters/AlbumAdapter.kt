@@ -1,7 +1,6 @@
 package com.mallich.musicplayer.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -9,10 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.R
 import com.mallich.musicplayer.databinding.AlbumsRowBinding
+import com.mallich.musicplayer.interfaces.AllMusicInterface
 import com.mallich.musicplayer.models.SongDataModel
-import com.mallich.musicplayer.ui.SingleAlbumActivity
 
-class AlbumAdapter(val context: Context, private val list: MutableList<SongDataModel>) :
+class AlbumAdapter(
+    val context: Context,
+    private val list: MutableList<SongDataModel>,
+    private val allMusicInterface: AllMusicInterface
+) :
     RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,15 +32,14 @@ class AlbumAdapter(val context: Context, private val list: MutableList<SongDataM
         val songDataModel = list[position]
         holder.albumsRowBinding.data = songDataModel
         holder.albumsRowBinding.root.setOnClickListener {
-            openSelectedAlbum(songDataModel)
+            openSelectedAlbum(songDataModel, position)
         }
     }
 
-    private fun openSelectedAlbum(songDataModel: SongDataModel) {
-        val intent= Intent(context, SingleAlbumActivity::class.java)
-        intent.putExtra(MusicRepository.ALBUM, songDataModel.album)
-        intent.putExtra(MusicRepository.ALBUM_ART, songDataModel.albumArt)
-        context.startActivity(intent)
+    private fun openSelectedAlbum(songDataModel: SongDataModel, position: Int) {
+        MusicRepository.album = songDataModel.album
+        MusicRepository.albumArt = songDataModel.albumArt
+        allMusicInterface.sendSelectedSongToPlay(context, position)
     }
 
     override fun getItemCount(): Int {

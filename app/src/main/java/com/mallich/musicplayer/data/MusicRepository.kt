@@ -8,25 +8,21 @@ import android.database.Cursor
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
 import android.provider.MediaStore
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.bumptech.glide.Glide
 import com.mallich.musicplayer.MusicService
-import com.mallich.musicplayer.R
-import com.mallich.musicplayer.interfaces.AllMusicInterface
 import com.mallich.musicplayer.models.SongDataModel
-import com.mallich.musicplayer.ui.MainActivity
-import com.mallich.musicplayer.ui.MusicPlayerActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class MusicRepository {
 
     companion object {
+
+        var SINGLE_ALBUM_IS_ACTIVE: Boolean = false
+        var OPEN_FROM_HOME_AS_SINGLE_ALBUM: Boolean = false
+        var OPEN_FROM_HOME_AS_ALL_SONGS: Boolean = false
 
         const val ALBUM: String = "Album"
         const val ALL_SONGS: String = "AllSongs"
@@ -53,6 +49,8 @@ class MusicRepository {
         var albumArt: String = ""
         var albumType: String = ALL_SONGS
         var playList: MutableList<SongDataModel> = mutableListOf()
+
+        var mediaPlayer: MediaPlayer? = null
 
         // Reusable Methods
         @SuppressLint("Recycle")
@@ -375,7 +373,7 @@ class MusicRepository {
         }
 
         fun checkIfMediaPlayerIsNull(context: Context) {
-            if (MusicPlayerActivity.mediaPlayer == null) {
+            if (mediaPlayer == null) {
                 getSelectedPlayList(context)
                 playMusic(context)
             }
@@ -383,16 +381,16 @@ class MusicRepository {
 
         fun playMusic(context: Context) {
             val selectedSong = Uri.parse(playList[songPosition].fileData)
-            if (MusicPlayerActivity.mediaPlayer != null) {
-                MusicPlayerActivity.mediaPlayer?.stop()
-                MusicPlayerActivity.mediaPlayer?.release()
+            if (mediaPlayer != null) {
+                mediaPlayer?.stop()
+                mediaPlayer?.release()
             }
-            MusicPlayerActivity.mediaPlayer = MediaPlayer.create(context, selectedSong)
+            mediaPlayer = MediaPlayer.create(context, selectedSong)
             if (SONG_STATUS == SONG_PLAY) {
-                MusicPlayerActivity.mediaPlayer?.start()
+                mediaPlayer?.start()
             } else {
-                MusicPlayerActivity.mediaPlayer?.start()
-                MusicPlayerActivity.mediaPlayer?.pause()
+                mediaPlayer?.start()
+                mediaPlayer?.pause()
             }
         }
 
@@ -401,7 +399,7 @@ class MusicRepository {
             albumType = playListType
             SELECTED_SONG = true
             updateSongInDataStore(context)
-            context.startActivity(Intent(context, MusicPlayerActivity::class.java))
+//            context.startActivity(Intent(context, MusicPlayerActivity::class.java))
         }
 
         fun getTimeString(milliseconds: Int): String {
@@ -427,12 +425,12 @@ class MusicRepository {
 
         fun updateSongInDataStore(musicViewModel: MusicViewModel) {
             musicViewModel.updateCurrentSong(
-                MusicRepository.playList[MusicRepository.songPosition].name,
-                MusicRepository.playList[MusicRepository.songPosition].album,
-                MusicRepository.playList[MusicRepository.songPosition].artist,
-                MusicRepository.songPosition,
-                MusicRepository.albumType,
-                MusicRepository.playList[MusicRepository.songPosition].albumArt
+                playList[songPosition].name,
+                playList[songPosition].album,
+                playList[songPosition].artist,
+                songPosition,
+                albumType,
+                playList[songPosition].albumArt
             )
         }
     }

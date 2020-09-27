@@ -1,7 +1,6 @@
 package com.mallich.musicplayer.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,11 +9,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mallich.musicplayer.data.MusicRepository
 import com.mallich.musicplayer.R
-import com.mallich.musicplayer.data.MusicViewModel
 import com.mallich.musicplayer.databinding.SongsRowBinding
 import com.mallich.musicplayer.interfaces.AllMusicInterface
 import com.mallich.musicplayer.models.SongDataModel
-import com.mallich.musicplayer.ui.MusicPlayerActivity
 import java.lang.NumberFormatException
 
 class SingleAlbumAdapter(
