@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mallich.musicplayer.data.MusicRepository
+import com.mallich.musicplayer.repositories.MusicRepository
 import com.mallich.musicplayer.R
 import com.mallich.musicplayer.databinding.SongsRowBinding
 import com.mallich.musicplayer.interfaces.AllMusicInterface
@@ -46,6 +46,10 @@ class SingleAlbumAdapter(
         holder.albumsRowBinding.root.setOnClickListener {
             allMusicInterface.sendSelectedSongToPlay(context, position)
         }
+        holder.albumsRowBinding.songsRowOptionsBtn.setOnClickListener {
+            allMusicInterface.optionClicked(context, songDataModel, holder.albumsRowBinding.songsRowOptionsBtn)
+        }
+
     }
 
     override fun getItemCount(): Int {

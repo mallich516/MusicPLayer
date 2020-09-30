@@ -11,10 +11,11 @@ import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mallich.musicplayer.data.MusicRepository
+import com.mallich.musicplayer.repositories.MusicRepository
 import com.mallich.musicplayer.adapters.AlbumAdapter
 import com.mallich.musicplayer.R
 import com.mallich.musicplayer.interfaces.AllMusicInterface
+import com.mallich.musicplayer.models.SongDataModel
 
 class AlbumsFragment : Fragment(), AllMusicInterface {
 
@@ -42,5 +43,8 @@ class AlbumsFragment : Fragment(), AllMusicInterface {
         findNavController().navigate(R.id.action_homeFragment_to_singleAlbumFragment)
     }
 
+    override fun optionClicked(context: Context, songData: SongDataModel, view: View) {
+
+    }
 
 }

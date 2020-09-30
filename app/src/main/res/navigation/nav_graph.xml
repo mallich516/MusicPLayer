@@ -13,6 +13,7 @@
         <action
             android:id="@+id/action_splashScreenFragment_to_homeFragment"
             app:destination="@id/homeFragment"
+            app:enterAnim="@anim/from_right"
             app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -24,10 +25,16 @@
         <action
             android:id="@+id/action_homeFragment_to_playerFragment"
             app:destination="@id/playerFragment"
+            app:enterAnim="@anim/to_top"
+            app:popEnterAnim="@anim/from_top"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_homeFragment_to_singleAlbumFragment"
-            app:destination="@id/singleAlbumFragment" />
+            app:destination="@id/singleAlbumFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/playerFragment"
@@ -37,10 +44,12 @@
         <action
             android:id="@+id/action_playerFragment_to_homeFragment"
             app:destination="@id/homeFragment"
+            app:enterAnim="@anim/from_top"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_playerFragment_to_singleAlbumFragment"
             app:destination="@id/singleAlbumFragment"
+            app:enterAnim="@anim/from_top"
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
@@ -51,9 +60,17 @@
         <action
             android:id="@+id/action_singleAlbumFragment_to_playerFragment"
             app:destination="@id/playerFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_singleAlbumFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left" />
     </fragment>
 </navigation>

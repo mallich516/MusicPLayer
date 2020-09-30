@@ -1,4 +1,4 @@
-package com.mallich.musicplayer
+package com.mallich.musicplayer.services
 
 import android.app.*
 import android.content.Context
@@ -8,7 +8,8 @@ import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import com.mallich.musicplayer.data.MusicRepository
+import com.mallich.musicplayer.R
+import com.mallich.musicplayer.repositories.MusicRepository
 import com.mallich.musicplayer.ui.SplashScreenActivity
 
 class MusicService : Service() {

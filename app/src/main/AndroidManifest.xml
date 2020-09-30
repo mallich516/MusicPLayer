@@ -4,8 +4,11 @@
     package="com.mallich.musicplayer">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
@@ -22,8 +25,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".MusicService" />
-        <receiver android:name=".MusicReceiver" />
+        <service android:name=".services.MusicService" />
+        <receiver android:name=".services.MusicReceiver" />
 
     </application>
 

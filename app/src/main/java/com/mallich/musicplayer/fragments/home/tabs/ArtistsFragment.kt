@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mallich.musicplayer.R
-import com.mallich.musicplayer.data.MusicViewModel
+import com.mallich.musicplayer.viewmodels.MusicViewModel
 import com.mallich.musicplayer.databinding.FragmentArtistsBinding
 
 class ArtistsFragment : Fragment() {

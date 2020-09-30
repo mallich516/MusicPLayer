@@ -1,84 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="data"
             type="com.mallich.musicplayer.models.SongDataModel" />
     </data>
-    <LinearLayout
+
+    <com.google.android.material.card.MaterialCardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="10dp"
-        android:paddingTop="10dp"
-        android:gravity="center"
-        android:background="#00E8E8E8">
+        android:background="#00E8E8E8"
+        android:foreground="?attr/selectableItemBackground">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <ImageView
-                android:scaleType="fitXY"
-                android:setImage="@{data.albumArt}"
-                android:layout_width="@dimen/_38sdp"
-                android:layout_height="@dimen/_38sdp"
-                android:src="@drawable/music_logo"
-                tools:ignore="ContentDescription" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp"
+            android:paddingTop="10dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:layout_width="@dimen/_38sdp"
+                    android:layout_height="@dimen/_38sdp"
+                    android:scaleType="fitXY"
+                    android:setImage="@{data.albumArt}"
+                    android:src="@drawable/music_logo"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/songs_row_SongName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/robotobold"
+                        android:singleLine="true"
+                        android:text="@{data.name}"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/songs_row_SongMovie"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:singleLine="true"
+                        android:text="@{data.album}"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_8sdp" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/songs_row_SongName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/robotobold"
-                    android:singleLine="true"
-                    android:text="@{data.name}"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10sdp" />
-
-                <TextView
-                    android:id="@+id/songs_row_SongMovie"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
+                    android:id="@+id/songs_row_SongDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:fontFamily="@font/roboto_regular"
+                    android:gravity="center"
+                    android:paddingHorizontal="5dp"
                     android:singleLine="true"
-                    android:text="@{data.album}"
+                    android:text="@{data.duration}"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_8sdp" />
+                    android:textSize="16sp" />
 
+                <ImageView
+                    android:id="@+id/songs_row_OptionsBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_baseline_more_vert_24"
+                    tools:ignore="ContentDescription" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/songs_row_SongDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/roboto_regular"
-                android:gravity="center"
-                android:paddingHorizontal="5dp"
-                android:singleLine="true"
-                android:text="@{data.duration}"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".25dp"
+                android:layout_marginTop="10dp"
+                android:background="#000000" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height=".25dp"
-            android:layout_marginTop="10dp"
-            android:background="#000000" />
-    </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mallich.musicplayer.data.MusicRepository
+import com.mallich.musicplayer.repositories.MusicRepository
 import com.mallich.musicplayer.R
 import com.mallich.musicplayer.databinding.AlbumsRowBinding
 import com.mallich.musicplayer.interfaces.AllMusicInterface

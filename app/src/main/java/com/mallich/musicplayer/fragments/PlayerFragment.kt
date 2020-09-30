@@ -10,15 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import android.widget.Toast
-import androidx.activity.addCallback
-import androidx.lifecycle.ReportFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.mallich.musicplayer.R
-import com.mallich.musicplayer.data.MusicRepository
-import com.mallich.musicplayer.data.MusicViewModel
+import com.mallich.musicplayer.repositories.MusicRepository
+import com.mallich.musicplayer.viewmodels.MusicViewModel
 import com.mallich.musicplayer.databinding.FragmentPlayerBinding
 import java.lang.Exception
 
@@ -99,7 +96,7 @@ class PlayerFragment : Fragment() {
         }
 
         binding.musicPlayerBackBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_playerFragment_to_homeFragment)
+            findNavController().popBackStack()
         }
 
         binding.musicPlayerSongSeekBar.setOnSeekBarChangeListener(
@@ -198,7 +195,7 @@ class PlayerFragment : Fragment() {
     private fun updateTitleAndImage() {
         binding.musicPlayerTitle.text = MusicRepository.songTitle
         binding.musicPlayerAlbum.text = MusicRepository.album
-        Glide.with(this)
+        Glide.with(binding.musicPlayerImage.context)
             .load(MusicRepository.albumArt)
             .error(R.drawable.music_logo).into(
                 binding.musicPlayerImage

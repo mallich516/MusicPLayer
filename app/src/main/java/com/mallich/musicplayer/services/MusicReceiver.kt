@@ -1,14 +1,16 @@
-package com.mallich.musicplayer
+package com.mallich.musicplayer.services
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.asLiveData
 import com.mallich.musicplayer.data.MusicDataStore
-import com.mallich.musicplayer.data.MusicRepository
+import com.mallich.musicplayer.repositories.MusicRepository
 import com.mallich.musicplayer.interfaces.AllMusicInterface
+import com.mallich.musicplayer.models.SongDataModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,6 +53,10 @@ class MusicReceiver : BroadcastReceiver(), AllMusicInterface {
     }
 
     override fun sendSelectedSongToPlay(context: Context, position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun optionClicked(context: Context, songData: SongDataModel, view: View) {
         TODO("Not yet implemented")
     }
 

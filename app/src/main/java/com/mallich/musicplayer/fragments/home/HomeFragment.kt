@@ -1,26 +1,30 @@
 package com.mallich.musicplayer.fragments.home
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mallich.musicplayer.R
-import com.mallich.musicplayer.data.MusicRepository
-import com.mallich.musicplayer.data.MusicViewModel
 import com.mallich.musicplayer.databinding.FragmentHomeBinding
 import com.mallich.musicplayer.fragments.home.tabs.AlbumsFragment
 import com.mallich.musicplayer.fragments.home.tabs.SongsFragment
-import java.lang.Exception
+import com.mallich.musicplayer.repositories.MusicRepository
+import com.mallich.musicplayer.viewmodels.MusicViewModel
 
 class HomeFragment : Fragment() {
 
@@ -96,13 +100,12 @@ class HomeFragment : Fragment() {
             viewModel.updateSongStatus()
         }
         binding.homeCurrentSongLayout.setOnClickListener {
-            MusicRepository.OPEN_FROM_HOME_AS_SINGLE_ALBUM = true
+            MusicRepository.SELECTED_SONG = false
             findNavController().navigate(R.id.action_homeFragment_to_playerFragment)
         }
     }
 
     private fun startApplication() {
-
         val titlesList = mutableListOf<String>()
         titlesList.add("Songs")
         titlesList.add("Albums")
@@ -133,14 +136,19 @@ class HomeFragment : Fragment() {
                 requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) ==
-            PackageManager.PERMISSION_GRANTED
+            PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_SETTINGS
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
             startApplication()
         } else {
             requestPermissions(
                 arrayOf(
                     Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_SETTINGS
                 ), 1
             )
         }
@@ -153,11 +161,12 @@ class HomeFragment : Fragment() {
     ) {
         if (requestCode == 1) {
             if (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
                 startApplication()
-//                Toast.makeText(requireContext(), "Granted", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "Storage Permission Denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Storage Permission Denied", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

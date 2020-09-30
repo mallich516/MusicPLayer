@@ -1,9 +1,11 @@
-package com.mallich.musicplayer.data
+package com.mallich.musicplayer.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.mallich.musicplayer.data.MusicDataStore
+import com.mallich.musicplayer.repositories.MusicRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

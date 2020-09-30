@@ -11,4 +11,8 @@
     <string name="volume">VOLUME</string>
     <string name="let_s_start_music">Let\'s Start Music</string>
     <string name="play_now">Play Now</string>
+    <string name="set_as_ringtone">Set as ringtone</string>
+    <string name="go_to_album">Go to Album</string>
+    <string name="play_next">Play Next</string>
+    <string name="delete_song">Delete Song</string>
 </resources>

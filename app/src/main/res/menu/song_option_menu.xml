@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/song_option_SetAsRingtone"
+        android:title="@string/set_as_ringtone" />
+
+    <item
+        android:id="@+id/song_option_GoToAlbum"
+        android:title="@string/go_to_album" />
+
+    <item
+        android:id="@+id/song_option_PlayNext"
+        android:title="@string/play_next" />
+
+    <item
+        android:id="@+id/song_option_Delete"
+        android:title="@string/delete_song" />
+
+</menu>

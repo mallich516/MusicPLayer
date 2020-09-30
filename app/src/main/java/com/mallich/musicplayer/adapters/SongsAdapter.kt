@@ -2,12 +2,17 @@ package com.mallich.musicplayer.adapters
 
 import android.content.Context
 import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DiffUtil.ItemCallback
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mallich.musicplayer.data.MusicRepository
+import com.mallich.musicplayer.repositories.MusicRepository
 import com.mallich.musicplayer.interfaces.AllMusicInterface
 import com.mallich.musicplayer.R
 import com.mallich.musicplayer.databinding.SongsRowBinding
@@ -40,6 +45,10 @@ class SongsAdapter(
         holder.songsRowBinding.data = songDataModel
         holder.songsRowBinding.root.setOnClickListener {
             allMusicInterface.sendSelectedSongToPlay(context, position)
+        }
+
+        holder.songsRowBinding.songsRowOptionsBtn.setOnClickListener {
+            allMusicInterface.optionClicked(context, songDataModel, holder.songsRowBinding.songsRowOptionsBtn)
         }
     }
 

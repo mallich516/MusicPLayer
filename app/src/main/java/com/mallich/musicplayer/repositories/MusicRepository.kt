@@ -1,4 +1,4 @@
-package com.mallich.musicplayer.data
+package com.mallich.musicplayer.repositories
 
 import android.annotation.SuppressLint
 import android.content.ContentUris
@@ -10,8 +10,10 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.mallich.musicplayer.MusicService
+import com.mallich.musicplayer.services.MusicService
+import com.mallich.musicplayer.data.MusicDataStore
 import com.mallich.musicplayer.models.SongDataModel
+import com.mallich.musicplayer.viewmodels.MusicViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,6 +22,7 @@ class MusicRepository {
 
     companion object {
 
+        var currentSongTitle: String = ""
         var SINGLE_ALBUM_IS_ACTIVE: Boolean = false
         var OPEN_FROM_HOME_AS_SINGLE_ALBUM: Boolean = false
         var OPEN_FROM_HOME_AS_ALL_SONGS: Boolean = false
@@ -281,6 +284,7 @@ class MusicRepository {
             )
 
             if (cursor != null && cursor.moveToFirst()) {
+                val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
                 val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
                 val artist: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)
                 val duration: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
@@ -289,6 +293,7 @@ class MusicRepository {
                 val fileData: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
 
                 do {
+                    val audioId = cursor.getLong(id)
                     val titleString = cursor.getString(title)
                     val artistString = cursor.getString(artist)
                     val durationString = cursor.getString(duration)
@@ -300,7 +305,7 @@ class MusicRepository {
                     val albumArt = ContentUris.withAppendedId(artWorkUri, albumArtId)
 
                     val songDataModel = SongDataModel(
-                        albumArtId,
+                        audioId,
                         titleString,
                         albumString,
                         artistString,

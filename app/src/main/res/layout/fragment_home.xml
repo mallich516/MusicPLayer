@@ -99,17 +99,15 @@
             <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:neomorph_background_color="@color/neomorph_background"
                 app:neomorph_elevation="2dp"
-                app:neomorph_highlight_color="@color/neomorph_highlight"
-                app:neomorph_shadow_color="@color/neomorph_shadow"
+                app:neomorph_highlight_color="@color/neomorph_background"
+                app:neomorph_background_color="@color/neomorph_background"
                 app:neomorph_shadow_type="outer"
                 app:neomorph_view_type="circular">
 
                 <RelativeLayout
                     android:layout_width="@dimen/_56sdp"
                     android:layout_height="match_parent">
-
                     <ProgressBar
                         android:id="@+id/homeCurrent_song_progress"
                         style="?android:progressBarStyleHorizontal"
